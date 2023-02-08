@@ -16,6 +16,28 @@
     width: 60%;
 }
 
+#insertarResultado {
+    text-align: center;
+
+}
+
+#insertarResultado h3 {
+    font-size: 32px;
+    color: #0971e9;
+
+
+}
+
+
+#insertarResultado p {
+    font-size: 28px;
+
+
+}
+
+
+
+
 /* Estilos Generales de Seccion */
 
 
@@ -194,6 +216,15 @@ img {
     border-radius: 10px !important;
 }
 
+.producto-contenedor {
+    display: grid;
+    gap: 1rem;
+    max-width: 30rem;
+    margin: 10px auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
 
 #producto-contenedor {
     display: grid;

@@ -35,6 +35,11 @@ productosGenEle.push(new GeneradorElectrico(6, "Generador 9", "img9.jpg", "Tezla
 let tipoGenerador = document.getElementById("tipoCliente");
 let divResultadoTipo = document.getElementById("insertarDiv");
 
+
+// Defino una escucha para cuando se haga un cambio en el Select.
+// A partir del cambio en el Select se inserta un Formulario bajo la función agregarDivTipoXXXX
+// Luego también guardo en Local Storage el valor del select para utilizar más adelante para una promoción.
+// En este evento Change, también agrego la función "Submit" mediante la función creada agregarFuncionSubmit
 tipoGenerador.addEventListener("change", () => {
   
   const valorTipo = tipoGenerador.value;
@@ -54,26 +59,31 @@ tipoGenerador.addEventListener("change", () => {
     agregarFuncionSubmit();
 })
 
+
 let divInsertarResultado = document.getElementById("insertarResultado");
+
+// Defino la funcón agregarFuncionSubmit para que al presionar "Calcular", se produzca el cálculo y también
+// se inserte un Div en el DOM mostrando el resultado.
+// En esta misma función agrefarFuncionSubmit ejecuto la función pintarProductos para que se pinten solo 
+// los productos de la categoría elegida en el Select mediante función de orden superior Filter.
 
 const agregarFuncionSubmit = () => {
 const formulario = document.getElementById("resultadoTipoHogar");
 formulario.addEventListener("submit", (e) => {
   e.preventDefault();
   let consumoTotal = calcularConsumoHogar();
-  divInsertarResultado.innerHTML = `<h3>Tu consumo eléctrico estimado es de ${consumoTotal} Watt</h3><br>
+  divInsertarResultado.innerHTML = `<h3>Tu consumo eléctrico estimado es de ${consumoTotal} KVA</h3><br>
   <p>A continuación verás los Grupos Electrógenos recomendados.</p>`;
 
 pintarProductos()
 
-pintarTodosProductos();
 });
 
 };
 
 
 
-
+// Función que afrega el formulario para calcular el consumo de un hogar / comercio / industria
 
 let agregarDivTipoHogar = () => {
   divResultadoTipo.innerHTML = `<div class="contenedor" id="divResultadoTipo">
@@ -130,6 +140,8 @@ let agregarDivTipoHogar = () => {
 </div>`;
 }
 
+// Función que afrega el formulario para calcular el consumo de un hogar / comercio / industria
+
 let agregarDivTipoComercio = () => {
   divResultadoTipo.innerHTML = `<div class="contenedor" id="divResultadoTipo">
   <h2 class="seccion-titulo">Completa con los equipos eléctricos indispensables</h2>
@@ -184,6 +196,7 @@ let agregarDivTipoComercio = () => {
   </form>
 </div>`;
 }
+// Función que afrega el formulario para calcular el consumo de un hogar / comercio / industria
 
 let agregarDivTipoIndustria = () => {
   divResultadoTipo.innerHTML = `<div class="contenedor" id="divResultadoTipo">
@@ -240,7 +253,7 @@ let agregarDivTipoIndustria = () => {
 </div>`;
 }
 
-
+// Cálculo del consumo según los datos ingresados en el formulario. Retorna el resultado.
 calcularConsumoHogar = () => {
   const metrosC = document.getElementById("metrosCuadrados");
   const estufas = document.getElementById("estufas");
@@ -250,13 +263,13 @@ calcularConsumoHogar = () => {
   const heladeras = document.getElementById("heladeras");
   const heladerasW = document.getElementById("heladerasWatt");
   const microondas = document.getElementById("microondas");
-  const microondasW = document.getElementById("microondasWatt");
+  const microondasW = document.getElementById("microWatt");
   const aireAcond = document.getElementById("aireAcond");
   const aireW = document.getElementById("aireWatt");
   const freezer = document.getElementById("freezer");
   const freezerW = document.getElementById("freezerWatt");
   const otrosW = document.getElementById("otrosWatt");
-  let consumos = metrosC.value * 150 // aca va el resto del cálculo matemático
+  let consumos = ((metrosC.value * 150) + (Number(estufas.value) * Number(estufasW.value)) + (Number(cocinas.value) * Number(cocinasW.value)) + (Number(heladeras.value) * Number(heladerasW.value)) + (Number(microondas.value) * Number(microondasW.value)) + (Number(aireAcond.value) * Number(aireW.value)) + (Number(freezer.value) * Number(freezerW.value)) + Number(otrosW.value)) // aca va el resto del cálculo matemático
   return consumos;
 }
 
@@ -268,15 +281,75 @@ calcularConsumoHogar = () => {
 
 // Recupero del JSON el Valor sel Select capturado para re utilizar en función pintarProductos
 
+let destacados = document.getElementById("insertarRecomendados");
 let valueTipoUso = JSON.parse(localStorage.getItem("tipoUso"))
 
+// Creo función Pintar Productos destacados para utilizar el valor de Local Storage y mediante
+// un condicional, poder insertar en el DOM un DIV que incluya los productos previamente seleccionados por el usuario en el Select.
+// Para probar por favor actualizar la página luego de cambiar el select. Aparecerá arriba las Ofertas
 
+const pintarDestacados = () => {
+    if(valueTipoUso == "1") {
+        let productosHogar = productosGenEle.filter((element) => element.tipoUso.includes("Uso Hogar"));
+        productosHogar.forEach((producto) => {
+          const div = document.createElement('div')
+          div.classList.add('card')
+          div.innerHTML += `
+              <div class="card-image">
+                  <img src="${producto.img}">
+                  <span class="card-title">Oferta ${producto.nombreProd}</span>
+              </div>
+              <div class="card-content">
+                  <p>${producto.tipoUso}</p>
+                  <p>Kva: ${producto.potencia}</p>
+                  <p>$${producto.precio}</p>
+              </div> `
+          destacados.appendChild(div);
+        
+        });
+        }else if(valueTipoUso == "2") {
+            let productosComercio = productosGenEle.filter((element) => element.tipoUso.includes("Uso Comercial"));
+            productosComercio.forEach((producto) => {
+              const div = document.createElement('div')
+              div.classList.add('card')
+              div.innerHTML += `
+                  <div class="card-image">
+                      <img src="${producto.img}">
+                      <span class="card-title">Oferta ${producto.nombreProd}</span>
+                  </div>
+                  <div class="card-content">
+                      <p>${producto.tipoUso}</p>
+                      <p>Kva: ${producto.potencia}</p>
+                      <p>$${producto.precio}</p>
+                  </div> `
+              destacados.appendChild(div);
+            });
+        }else if(valueTipoUso == "3") {
+            let productosIndustria = productosGenEle.filter((element) => element.tipoUso.includes("Uso Industrial"));
+            productosIndustria.forEach((producto) => {
+            const div = document.createElement('div')
+            div.classList.add('card')
+            div.innerHTML += `
+                <div class="card-image">
+                    <img src="${producto.img}">
+                    <span class="card-title">Oferta ${producto.nombreProd}</span>
+                </div>
+                <div class="card-content">
+                    <p>${producto.tipoUso}</p>
+                    <p>Kva: ${producto.potencia}</p>
+                    <p>$${producto.precio}</p>
+                </div> `
+            destacados.appendChild(div);
+            });
+        }
+}
 
-// Defino la función que hará que se muestren los productos seleccionados mediante en Pantalla
+// Defino la función que hará que se muestren los productos en Pantalla. De acuerdo al valor del Select Pinta todos, o le suma los seleccionados primero
 
 const pintarProductos = () => {
-  const contenedor = document.getElementById('producto-contenedor')
-    if(valueTipoUso == "1") {
+  const contenedor = document.getElementById('producto-contenedor');
+  const contenedorTotal = document.getElementById('producto-totales')
+    if(tipoGenerador.value == "1") {
       let productosHogar = productosGenEle.filter((element) => element.tipoUso.includes("Uso Hogar"));
       productosHogar.forEach((producto) => {
         const div = document.createElement('div')
@@ -290,13 +363,13 @@ const pintarProductos = () => {
             <div class="card-content">
                 <p>${producto.marca}</p>
                 <p>${producto.tipoUso}</p>
-                <p>Watt: ${producto.potencia}</p>
+                <p>Kva: ${producto.potencia}</p>
                 <p>$${producto.precio}</p>
             </div> `
         contenedor.appendChild(div);
       
       });
-      }else if(valueTipoUso == "2") {
+      }else if(tipoGenerador.value == "2") {
         let productosComercio = productosGenEle.filter((element) => element.tipoUso.includes("Uso Comercial"));
         productosComercio.forEach((producto) => {
           const div = document.createElement('div')
@@ -310,7 +383,7 @@ const pintarProductos = () => {
             <div class="card-content">
                 <p>${producto.marca}</p>
                 <p>${producto.tipoUso}</p>
-                <p>Watt: ${producto.potencia}</p>
+                <p>Kva: ${producto.potencia}</p>
                 <p>$${producto.precio}</p>
             </div> `
           contenedor.appendChild(div);
@@ -318,7 +391,7 @@ const pintarProductos = () => {
         });
 
 
-      }else if(valueTipoUso == "3") {
+      }else if(tipoGenerador.value == "3") {
         let productosIndustria = productosGenEle.filter((element) => element.tipoUso.includes("Uso Industrial"));
         productosIndustria.forEach((producto) => {
           const div = document.createElement('div')
@@ -332,25 +405,17 @@ const pintarProductos = () => {
             <div class="card-content">
                 <p>${producto.marca}</p>
                 <p>${producto.tipoUso}</p>
-                <p>Watt: ${producto.potencia}</p>
+                <p>Kva: ${producto.potencia}</p>
                 <p>$${producto.precio}</p>
             </div> `
-          contenedor.appendChild(div);
+        contenedor.appendChild(div);
         });
 
-      }
-
-}
-
-
-// Galería con todos los productos
-
-const pintarTodosProductos = () => {
-  const contenedorTotal = document.getElementById('producto-totales')
-  productosGenEle.forEach((producto) => {
-        const div = document.createElement('div')
-        div.classList.add('card')
-        div.innerHTML += `
+      }else if(tipoGenerador.value == "0") {
+        productosGenEle.forEach((producto) => {
+          const div = document.createElement('div')
+          div.classList.add('card')
+          div.innerHTML += `
             <div class="card-image">
                 <img src="${producto.img}">
                 <span class="card-title">${producto.nombreProd}</span>
@@ -359,14 +424,15 @@ const pintarTodosProductos = () => {
             <div class="card-content">
                 <p>${producto.marca}</p>
                 <p>${producto.tipoUso}</p>
-                <p>Watt: ${producto.potencia}</p>
+                <p>Kva: ${producto.potencia}</p>
                 <p>$${producto.precio}</p>
             </div> `
-            contenedorTotal.appendChild(div);
-      
-      });
-
+        contenedorTotal.appendChild(div);
+        });
+    }
 }
+
 pintarProductos()
 
-pintarTodosProductos();
+pintarDestacados()
+
