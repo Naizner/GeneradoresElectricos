@@ -1,16 +1,17 @@
 // Comienzo a crear los productos a partir de una Clase constructora
 
+
 class GeneradorElectrico {
-  constructor(id, nombreProd, img, marca, potencia, precio, tipoUso, descrip) {
-    this.id = id;
-    this.nombreProd = nombreProd;
-    this.img = img;
-    this.marca = marca;
-    this.potencia = potencia;
-    this.precio = precio;
-    this.tipoUso = tipoUso;
-    this.descrip = descrip;
-  }
+    constructor(id, nombreProd, img, marca, potencia, precio, tipoUso, descrip) {
+        this.id = id;
+        this.nombreProd = nombreProd;
+        this.img = img;
+        this.marca = marca;
+        this.potencia = potencia;
+        this.precio = precio;
+        this.tipoUso = tipoUso;
+        this.descrip = descrip;
+    }
 
 
 }
@@ -18,7 +19,7 @@ class GeneradorElectrico {
 // Array que contendrá los productos
 let productosGenEle = [];
 
-// Creo nuevos productos de la Clase GeneradorEletrico con sus propiedades
+// Creo nuevos productos de la Clase GeneradorEletrico con sus propiedades / Se generan 9 Productos de muestra
 let producto1 = productosGenEle.push(new GeneradorElectrico(1, "Generador 1", "img1.jpg", "Honda", 10, 10000, "Uso Hogar", "Pequeño Electro Generador de 10 KVA para abastecer el Hogar"));
 productosGenEle.push(new GeneradorElectrico(2, "Generador 2", "img2.jpg", "Toyota", 15, 15000, "Uso Hogar", "Pequeño Electro Generador de 15 KVA para abastecer el Hogar"));
 productosGenEle.push(new GeneradorElectrico(3, "Generador 3", "img3.jpg", "Honda", 20, 20000, "Uso Comercial", "Pequeño Electro Generador de 20 KVA para abastecer el Comercio"));
@@ -31,30 +32,28 @@ productosGenEle.push(new GeneradorElectrico(6, "Generador 9", "img9.jpg", "Tezla
 
 
 
-
 let tipoGenerador = document.getElementById("tipoCliente");
 let divResultadoTipo = document.getElementById("insertarDiv");
 
 
 // Defino una escucha para cuando se haga un cambio en el Select.
-// A partir del cambio en el Select se inserta un Formulario bajo la función agregarDivTipoXXXX
-// Luego también guardo en Local Storage el valor del select para utilizar más adelante para una promoción.
+// A partir del cambio en el Select se inserta un Formulario (podría generarse un formulario distinto para cada Categoría) bajo la función agregarDivTipoXXXX
+// Luego, también guardo en Local Storage el valor del select para utilizar más adelante para una promoción / Oferta que aparecerá al inicio de la pantalla en una nueva sesión del usuario (F5 - Actualizar).
 // En este evento Change, también agrego la función "Submit" mediante la función creada agregarFuncionSubmit
 tipoGenerador.addEventListener("change", () => {
-  
-  const valorTipo = tipoGenerador.value;
+const valorTipo = tipoGenerador.value;
     if (valorTipo === "1") {
-      agregarDivTipoHogar();
-      const valorTipoHogar = (clave, valor) => {localStorage.setItem(clave, valor)};
-      valorTipoHogar("tipoUso", JSON.stringify(valorTipo));  
+        agregarDivTipoHogar();
+        const valorTipoHogar = (clave, valor) => {localStorage.setItem(clave, valor)};
+        valorTipoHogar("tipoUso", JSON.stringify(valorTipo));  
     }else if (valorTipo === "2") {
-      agregarDivTipoComercio()
-      const valorTipoComercial = (clave, valor) => {localStorage.setItem(clave, valor)};
-      valorTipoComercial("tipoUso", JSON.stringify(valorTipo)); 
+        agregarDivTipoComercio()
+        const valorTipoComercial = (clave, valor) => {localStorage.setItem(clave, valor)};
+        valorTipoComercial("tipoUso", JSON.stringify(valorTipo)); 
     }else if(valorTipo === "3") {
-      agregarDivTipoIndustria();
-      const valorTipoIndustria = (clave, valor) => {localStorage.setItem(clave, valor)};
-      valorTipoIndustria("tipoUso", JSON.stringify(valorTipo)); 
+        agregarDivTipoIndustria();
+        const valorTipoIndustria = (clave, valor) => {localStorage.setItem(clave, valor)};
+        valorTipoIndustria("tipoUso", JSON.stringify(valorTipo)); 
     }
     agregarFuncionSubmit();
 })
@@ -70,10 +69,11 @@ let divInsertarResultado = document.getElementById("insertarResultado");
 const agregarFuncionSubmit = () => {
 const formulario = document.getElementById("resultadoTipoHogar");
 formulario.addEventListener("submit", (e) => {
-  e.preventDefault();
-  let consumoTotal = calcularConsumoHogar();
-  divInsertarResultado.innerHTML = `<h3>Tu consumo eléctrico estimado es de ${consumoTotal} KVA</h3><br>
-  <p>A continuación verás los Grupos Electrógenos recomendados.</p>`;
+e.preventDefault();
+  alerta(); //Ejecuto función de Alerta con Sweet Alert
+let consumoTotal = calcularConsumoHogar();
+divInsertarResultado.innerHTML = `<h3>Tu consumo eléctrico estimado es de ${consumoTotal} KVA</h3><br>
+<p>A continuación verás los Grupos Electrógenos recomendados.</p>`;
 
 pintarProductos()
 
@@ -269,7 +269,7 @@ calcularConsumoHogar = () => {
   const freezer = document.getElementById("freezer");
   const freezerW = document.getElementById("freezerWatt");
   const otrosW = document.getElementById("otrosWatt");
-  let consumos = ((metrosC.value * 150) + (Number(estufas.value) * Number(estufasW.value)) + (Number(cocinas.value) * Number(cocinasW.value)) + (Number(heladeras.value) * Number(heladerasW.value)) + (Number(microondas.value) * Number(microondasW.value)) + (Number(aireAcond.value) * Number(aireW.value)) + (Number(freezer.value) * Number(freezerW.value)) + Number(otrosW.value)) // aca va el resto del cálculo matemático
+  let consumos = ((metrosC.value * 0.5) + (Number(estufas.value) * Number(estufasW.value)) + (Number(cocinas.value) * Number(cocinasW.value)) + (Number(heladeras.value) * Number(heladerasW.value)) + (Number(microondas.value) * Number(microondasW.value)) + (Number(aireAcond.value) * Number(aireW.value)) + (Number(freezer.value) * Number(freezerW.value)) + Number(otrosW.value)) // aca va el resto del cálculo matemático
   return consumos;
 }
 
@@ -435,4 +435,68 @@ const pintarProductos = () => {
 pintarProductos()
 
 pintarDestacados()
+
+// Creando Función de Alerta con Sweet Alert para mostrar Cartel al presionar Botón Submit luego de cargar la información
+
+const alerta = () => {
+    swal({
+        title: "Busca equipos que cubran tu Consumo en KVA",
+        icon: "success",
+    });
+}
+
+
+// Explotando la API de Usuarios para mostrar en Pantalla "Clientes Satisfechos de prueba"
+// Se generan Clientes Random y se traen los datos individuales de 4 Clientes
+// Uso de fetch
+// Manejo del JSON e iteración sobre el Array para mostrar en el DOM
+
+
+// Traigo el Div de Clientes
+
+let clientes = document.getElementById("clientes");
+
+fetch('https://randomuser.me/api/?results=4')
+    .then((results) => results.json())
+    .then((results) => {
+        let datos = results.results
+        for(let info of datos)  {
+            clientes.classList.add("py-5");
+            clientes.classList.add("team4");
+            clientes.innerHTML += `
+            <div class="col-lg-3 mb-4">
+                <!-- Row -->
+                <div class="row">
+                <div class="col-md-12">
+                    <img src=${info.picture.large} alt="wrapkit" class="img-fluid rounded-circle" />
+                </div>
+                <div class="col-md-12 text-center">
+                    <div class="pt-2">
+                    <h5 class="mt-4 font-weight-medium mb-0">${info.name.first + " " + info.name.last}</h5>
+                    <h6 class="subtitle mb-3">${"Email: " + info.email}</h6>
+                    <h6 class="subtitle mb-3">${"Tel: " + info.phone}</h6>
+                    <p>Edad: ${info.dob.age}</p>
+                    <p>País: ${info.location.country}</p>
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="icon-social-facebook"></i></a></li>
+                        <li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="icon-social-twitter"></i></a></li>
+                        <li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="icon-social-instagram"></i></a></li>
+                        <li class="list-inline-item"><a href="#" class="text-decoration-none d-block px-1"><i class="icon-social-behance"></i></a></li>
+                    </ul>
+                    </div>
+                </div>
+                </div>
+                <!-- Row -->
+            </div>
+            <!-- column  -->
+            </div>
+        `    
+            console.log(results.results);
+
+        }
+        })
+
+    .catch((err)=> console.log("Error inesperado - Revisar: ", err))
+
+
 
